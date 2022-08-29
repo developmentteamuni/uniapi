@@ -27,44 +27,56 @@ class GeneralController extends Controller
         // ], 200);
     }
 
-    public function store(Request $request)
+    public function uni() 
     {
-        $request->validate([
-            'university' => 'required|max:100'
-        ]);
-
-        $uni = University::create([
-            'university' => $request->university
-        ]);
-
-        return response([
-            'uni' => $uni
-        ], 201);
+        $client = new Client();
+        $url = 'https://www.4icu.org/us/a-z/';
+        $crawler = $client->request('GET', $url);
+        $crawler->filter('.table-responsive')->each(function ($node) {
+          echo response([
+            'data' => $node->text(),
+          ]);
+        });
     }
 
-    public function update(Request $request, University $university)
-    {
-        $request->validate([
-            'university' => 'required|max:100'
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'university' => 'required|max:100'
+    //     ]);
 
-        $uni = $university->update([
-            'university' => $request->university
-        ]);
+    //     $uni = University::create([
+    //         'university' => $request->university
+    //     ]);
 
-        return response([
-            'message' => 'success',
-            'uni' => $uni
-        ], 201);
-    }
+    //     return response([
+    //         'uni' => $uni
+    //     ], 201);
+    // }
+
+    // public function update(Request $request, University $university)
+    // {
+    //     $request->validate([
+    //         'university' => 'required|max:100'
+    //     ]);
+
+    //     $uni = $university->update([
+    //         'university' => $request->university
+    //     ]);
+
+    //     return response([
+    //         'message' => 'success',
+    //         'uni' => $uni
+    //     ], 201);
+    // }
     
 
-    public function delete(University $university)
-    {
-        $university->delete();
+    // public function delete(University $university)
+    // {
+    //     $university->delete();
 
-        return response([
-            'message' => 'deleted'
-        ], 200);
-    }
+    //     return response([
+    //         'message' => 'deleted'
+    //     ], 200);
+    // }
 }

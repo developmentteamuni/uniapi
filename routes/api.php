@@ -27,5 +27,5 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::controller(GeneralController::class)->group(function() {
     Route::get('/general/courses', 'index');
-    Route::post('/general/university', 'uni');
+    Route::get('/general/university', 'uni');
 });
