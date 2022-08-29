@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\University;
+use Goutte\Client;
 use Illuminate\Http\Request;
 
 class GeneralController extends Controller
@@ -10,11 +11,20 @@ class GeneralController extends Controller
 
     public function index()
     {
-        $uni = University::latest()->get();
+        $client = new Client();
+        $url = 'https://www.act.org/content/act/en/research/reports/act-publications/college-choice-report-class-of-2013/college-majors-and-occupational-choices/college-majors-and-occupational-choices.html';
+        $crawler = $client->request('GET', $url);
+        $crawler->filter('.text-block-body-content')->each(function ($node) {
+          echo response([
+            'data' => $node->text(),
+          ]);
+        });
 
-        return response([
-            'uni' => $uni
-        ], 200);
+        // $uni = University::latest()->get();
+
+        // return response([
+        //     'uni' => $uni
+        // ], 200);
     }
 
     public function store(Request $request)

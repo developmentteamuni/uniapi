@@ -26,8 +26,6 @@ Route::post('verify', [AuthController::class, 'verifyOtp'])->name('verify');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::controller(GeneralController::class)->group(function() {
-    Route::get('/general/university', 'index');
-    Route::post('/general/university', 'store');
-    Route::post('/general/update/{university}', 'update');
-    Route::delete('/general/delete/{university}', 'delete');
+    Route::get('/general/courses', 'index');
+    Route::post('/general/university', 'uni');
 });
