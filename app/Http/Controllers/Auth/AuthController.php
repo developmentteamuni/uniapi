@@ -51,6 +51,11 @@ class AuthController extends Controller
         ]);
 
         $userverified = User::where('email', $request->email)->first();
+        if(!$userverified) {
+            return response([
+                'message' => 'Error verifying user'
+            ], 400);
+        }
         if($userverified->otp == 'verified')
         {
             return response([
