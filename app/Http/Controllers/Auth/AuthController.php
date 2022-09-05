@@ -23,7 +23,7 @@ class AuthController extends Controller
             'lastname' => $registerRequest->lastname,
             'major' => $registerRequest->major,
             'university' => $registerRequest->university,
-            'otp' => $otp,
+            'otp' => str($otp),
             'email' => $registerRequest->email,
             'password' => Hash::make($registerRequest->password),
         ]);
