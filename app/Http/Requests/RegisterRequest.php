@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\EmailRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -24,6 +25,11 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
+            // 'email' => [
+            //     'required',
+            //     new EmailRule(),
+            //     'unique:users,email',
+            // ],
             'email' => 'required|email|unique:users,email',
             'firstname' => 'required|string',
             'lastname' => 'required|string',
@@ -31,6 +37,7 @@ class RegisterRequest extends FormRequest
             'major' => 'required',
             'password' => 'required|min:6|same:confirm_password',
             'confirm_password' => 'required',
+            
         ];
     }
 }
