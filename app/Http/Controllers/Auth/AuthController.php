@@ -15,7 +15,8 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $registerRequest)
     {
-        $otp = rand(1000,9999);
+        // $otp = rand(1000,9999);
+        $otp = 4321;
         $registerRequest->validated();
         $user = User::create([
             'firstname' => $registerRequest->firstname,
