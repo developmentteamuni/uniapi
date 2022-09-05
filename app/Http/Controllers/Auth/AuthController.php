@@ -53,7 +53,7 @@ class AuthController extends Controller
 
         if($user) {
             auth()->login($user, true);
-            $user = User::where('email', $request->email)->update(['otp' => 'empty']);
+            $user = User::where('email', $request->email)->update(['otp' => 'verified']);
             $token = auth()->user()->createToken('authToken')->plainTextToken;
 
             return response([
@@ -63,7 +63,7 @@ class AuthController extends Controller
         }else{
             return response([
                 'message' => 'Incorrect Otp'
-            ], 422);
+            ], 400);
         }
     }
 
@@ -77,7 +77,7 @@ class AuthController extends Controller
         if(!$user || !Hash::check($loginRequest->password, $user->password)) {
             return response([
                 'message' => 'Incorrect credentials'
-            ], 422);
+            ], 400);
         }
 
         $token = $user->createToken('authToken')->plainTextToken;
@@ -100,7 +100,7 @@ class AuthController extends Controller
         if(!$user)
             return response([
                 'message' => 'User not found'
-            ], 422);
+            ], 400);
         
         return response([
             'message' => 'success'
@@ -120,7 +120,7 @@ class AuthController extends Controller
         if(!$user)
             return response([
                 'message' => 'Error changing password'
-            ], 422);
+            ], 400);
 
         return response([
             'message' => 'success',

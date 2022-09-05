@@ -16,6 +16,7 @@ class GeneralController extends Controller
         $crawler = $client->request('GET', $url);
         $crawler->filter('.text-block-body-content')->each(function ($node) {
           echo response([
+            'message' => 'success',
             'data' => $node->text(),
           ]);
         });
@@ -34,8 +35,9 @@ class GeneralController extends Controller
         $crawler = $client->request('GET', $url);
         $crawler->filter('.table-responsive')->each(function ($node) {
           echo response([
+            'message' => 'success',
             'data' => $node->text(),
-          ]);
+          ], 200);
         });
     }
 

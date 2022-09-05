@@ -17,9 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
-    Route::post('checkemail', [AuthController::class, 'checkEmail']);
-    Route::post('changepassword', [AuthController::class, 'changePassword']);
+    
 });
+
+Route::post('checkemail', [AuthController::class, 'checkEmail']);
+Route::post('changepassword', [AuthController::class, 'changePassword']);
 
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('verify', [AuthController::class, 'verifyOtp'])->name('verify');
