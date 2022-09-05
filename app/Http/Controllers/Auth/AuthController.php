@@ -50,6 +50,14 @@ class AuthController extends Controller
             'otp' => 'required|integer'
         ]);
 
+        $userverified = User::where('email', $request->email)->first();
+        if($userverified->otp == 'verified')
+        {
+            return response([
+                'message' => 'Account has already been verified'
+            ]);
+        }else{
+
         $user = User::where([['email', $request->email], ['otp', $request->otp]])->first();
 
         if($user) {
@@ -66,6 +74,7 @@ class AuthController extends Controller
                 'message' => 'Incorrect Otp'
             ], 400);
         }
+    }
     }
 
     public function login(LoginRequest $loginRequest)
