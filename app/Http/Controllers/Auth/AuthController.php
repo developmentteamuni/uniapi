@@ -55,7 +55,7 @@ class AuthController extends Controller
         {
             return response([
                 'message' => 'Account has already been verified'
-            ]);
+            ], 400);
         }else{
 
         $user = User::where([['email', $request->email], ['otp', $request->otp]])->first();
