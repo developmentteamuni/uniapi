@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\General\CoursesController;
+use App\Http\Controllers\General\UniversityController;
 use App\Http\Controllers\GeneralController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +29,6 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('verify', [AuthController::class, 'verifyOtp'])->name('verify');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
-Route::controller(GeneralController::class)->group(function() {
-    Route::get('/general/courses', 'index');
-    Route::get('/general/university', 'uni');
-});
+
+Route::resource('courses', CoursesController::class);
+Route::resource('universities', UniversityController::class);
