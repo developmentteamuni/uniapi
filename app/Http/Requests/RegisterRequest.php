@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
             //     new EmailRule(),
             //     'unique:users,email',
             // ],
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users',
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'university' => 'required',
