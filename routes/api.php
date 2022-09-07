@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\General\CoursesController;
 use App\Http\Controllers\General\UniversityController;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\User\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
-    
+    Route::get('/user/profile', [ProfileController::class, 'index']);
+    Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
 });
 
 Route::post('checkemail', [AuthController::class, 'checkEmail']);
