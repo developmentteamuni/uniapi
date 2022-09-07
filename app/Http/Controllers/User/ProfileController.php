@@ -10,12 +10,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $user = User::with('profile')->find(Auth::id());
+        $user = User::with('profile')->find($id);
+
+        if($user)
+            return response([
+                'user' => $user
+            ], 200);
 
         return response([
-            'user' => $user
+            'message' => 'User not found'
         ], 200);
     }
 

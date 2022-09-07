@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
-    Route::get('/user/profile', [ProfileController::class, 'index']);
+    Route::get('/user/profile/{id}', [ProfileController::class, 'index']);
     Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
 });
 
