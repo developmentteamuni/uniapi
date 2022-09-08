@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
     Route::get('/feed', [FeedController::class, 'index']);
     Route::post('/feed/post', [FeedController::class, 'store']);
+    Route::post('/feed/like/{id}', [FeedController::class, 'react']);
 });
 
 Route::post('checkemail', [AuthController::class, 'checkEmail']);

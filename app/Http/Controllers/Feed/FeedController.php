@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Feed;
 
 use App\Http\Controllers\Controller;
 use App\Models\Feed;
+use App\Models\Reaction;
 use Illuminate\Http\Request;
 
 class FeedController extends Controller
@@ -11,7 +12,7 @@ class FeedController extends Controller
 
     public function index() 
     {
-        $feeds = Feed::with('user')->get();
+        $feeds = Feed::with('user')->withCount('reactions')->get();
         return response([
             'feeds' => $feeds
         ], 200);
@@ -43,5 +44,29 @@ class FeedController extends Controller
             'message' => 'success',
             'post' => $feed
         ], 201);
+    }
+
+    public function react($feed_id)
+    {
+        $reaction = Reaction::where([['feed_id', $feed_id], ['user_id', auth()->id()]])->first();
+
+        if(!empty($reaction)) {
+            $reaction->delete();
+            return response([
+                'message' => 'Unliked'
+            ], 200);
+        }else{
+            Reaction::create([
+                'feed_id' => $feed_id,
+                'user_id' => auth()->id()
+            ]);
+            return response([
+                'message' => 'Liked'
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Error liking feed'
+        ], 500);
     }
 }
