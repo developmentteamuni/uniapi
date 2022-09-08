@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function feeds()
+    {
+        return $this->hasMany(Feed::class);
+    }
 }
