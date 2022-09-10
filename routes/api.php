@@ -5,7 +5,9 @@ use App\Http\Controllers\Feed\FeedController;
 use App\Http\Controllers\General\CoursesController;
 use App\Http\Controllers\General\UniversityController;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\User\MessagesController;
 use App\Http\Controllers\User\ProfileController;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +28,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/feed', [FeedController::class, 'index']);
     Route::post('/feed/post', [FeedController::class, 'store']);
     Route::post('/feed/like/{id}', [FeedController::class, 'react']);
+    Route::get('/chat/{userid}/{receiverid}', [MessagesController::class, 'receive']);
+    Route::post('/message/{userid}/{receiverid}', [MessagesController::class, 'send']);
 });
 
 Route::post('checkemail', [AuthController::class, 'checkEmail']);
