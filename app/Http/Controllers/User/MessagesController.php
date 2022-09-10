@@ -22,9 +22,14 @@ class MessagesController extends Controller
 
         $message = Message::create($data);
 
+        if($message)
+            return response([
+                'message' => $message
+            ], 201);
+
         return response([
-            'message' => $message
-        ], 201);
+            'message' => 'Error sending message'
+        ], 500);
 
     }
 
