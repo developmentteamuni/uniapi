@@ -74,14 +74,14 @@ class ProfileController extends Controller
             $profile = Profile::updateOrCreate($profiledata);
             if(!$profile)
                 return response([
-                    'message' => 'Error update profile'
+                    'message' => 'Error updating profile'
                 ], 500);
         }else{
             // update profile without Image
             $profile = Profile::updateOrCreate($profiledata);
             if(!$profile)
                 return response([
-                    'message' => 'Error update profile'
+                    'message' => 'Error updating profile'
                 ], 500);
         }
 
