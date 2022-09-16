@@ -104,7 +104,7 @@ class FeedController extends Controller
             ], 201);
 
         return response([
-            'message' => 'Error posting message'
+            'message' => 'Error posting comment'
         ], 500);
     }
 
