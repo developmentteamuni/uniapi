@@ -25,9 +25,15 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/user/profile/{id}', [ProfileController::class, 'index']);
     Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
+    Route::get('/user/recents', [ProfileController::class, 'getRecentPosts']);
     Route::get('/feed', [FeedController::class, 'index']);
     Route::post('/feed/post', [FeedController::class, 'store']);
+    Route::delete('/feed/delete/{feed_id}', [FeedController::class, 'deleteFeed']);
     Route::post('/feed/like/{id}', [FeedController::class, 'react']);
+    Route::post('/feed/comment/{id}', [FeedController::class, 'makeComment']);
+    Route::post('/feed/savefeed/{id}', [FeedController::class, 'saveFeed']);
+    Route::get('/feed/savefeed', [FeedController::class, 'getSavedFeeds']);
+    Route::get('/feed/comments/{id}', [FeedController::class, 'comments']);
     Route::get('/chat/{userid}/{receiverid}', [MessagesController::class, 'receive']);
     Route::post('/message/{userid}/{receiverid}', [MessagesController::class, 'send']);
 });

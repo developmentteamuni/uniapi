@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Feed;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,6 +23,20 @@ class ProfileController extends Controller
         return response([
             'message' => 'User not found'
         ], 200);
+    }
+
+    public function getRecentPosts()
+    {
+        $feeds = Feed::where('user_id', auth()->id())->latest()->get();
+
+        if($feeds)
+            return response([
+                'feeds' => $feeds
+            ], 201);
+        
+        return response([
+            'message' => 'Error fetching data'
+        ], 500);
     }
 
     public function updateProfile(Request $request)

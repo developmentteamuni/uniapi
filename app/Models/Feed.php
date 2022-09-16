@@ -20,4 +20,9 @@ class Feed extends Model
     {
         return $this->hasMany(Reaction::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
