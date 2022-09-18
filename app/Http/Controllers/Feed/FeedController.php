@@ -14,7 +14,7 @@ class FeedController extends Controller
 
     public function index() 
     {
-        $feeds = Feed::with('user')->withCount('reactions')->get();
+        $feeds = Feed::with('user')->with('user.profile')->withCount('reactions')->get();
         return response([
             'feeds' => $feeds
         ], 200);
