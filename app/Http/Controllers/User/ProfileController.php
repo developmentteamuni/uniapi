@@ -73,36 +73,52 @@ class ProfileController extends Controller
             'minor' => $request->minor,
             'hobbies' => $request->hobbies,
             'interests' => $request->interests,
+            'profileImg' => 'No Image'
         ];
+            // get profile
+            $getprofile = Profile::where('user_id', auth()->id())->first();
+            if($getprofile) {
+                $profile = Profile::where('user_id', auth()->id())->update($profiledata);
+                if(!$profile){
+                    return response([
+                        'message' => 'Error updating profile'
+                    ], 500);
+                }else{
+                    return response([
+                        'user' => User::with('profile')->find(auth()->id()),
+                    ], 201);
+                }
+            }else{
+                $profile = Profile::create($profiledata);
+                if(!$profile){
+                    return response([
+                        'message' => 'Error updating profile'
+                    ], 500);
+                }else{
+                    return response([
+                        'user' => User::with('profile')->find(auth()->id()),
+                    ], 201);
+                }
+            }
+    }
 
-        // validate image
-        if($request->file('profileImg')) {
-            $request->validate([
-                'profileImage' => 'image'
-            ]);
+    public function updateImage(Request $request)
+    {
+            $profiledata = [];
             $image = $request->file('profileImg');
             $imageName = date('YmdHi').$image->getClientOriginalName();
             $image->move(public_path('public/profileImages'), $imageName);
             $profiledata['profileImg'] = $imageName;
+
+            $profile = Profile::where('user_id', auth()->id())->update($profiledata);
+
+            if(!$profile)
+                return response([
+                    'message' => 'Error updating profile'
+                ], 500);
             
-            // update profile with Image
-            $profile = Profile::updateOrCreate($profiledata);
-            if(!$profile)
-                return response([
-                    'message' => 'Error updating profile'
-                ], 500);
-        }else{
-            // update profile without Image
-            $profile = Profile::updateOrCreate($profiledata);
-            if(!$profile)
-                return response([
-                    'message' => 'Error updating profile'
-                ], 500);
-        }
-
         return response([
-            'user' => User::with('profile')->find(auth()->id()),
+            'message' => 'profile updated'
         ], 201);
-
     }
 }
