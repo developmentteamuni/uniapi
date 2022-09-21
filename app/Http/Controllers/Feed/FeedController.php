@@ -149,4 +149,18 @@ class FeedController extends Controller
             'message' => 'Deleted'
         ], 200);
     }
+
+    public function checkLike($user_id, $feed_id)
+    {
+        $check = Feed::where('user_id', $user_id)->where('id', $feed_id)->first();
+        if($check) {
+            return response([
+                'message' => 'Liked'
+            ], 200);
+        }else{
+            return response([
+                'message' => 'Not liked'
+            ], 200);
+        }
+    }
 }

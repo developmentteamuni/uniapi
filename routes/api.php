@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/feed/post', [FeedController::class, 'store']);
     Route::delete('/feed/delete/{feed_id}', [FeedController::class, 'deleteFeed']);
     Route::post('/feed/like/{id}', [FeedController::class, 'react']);
+    Route::get('/feed/like/{user_id}/{feed_id}', [FeedController::class, 'checkLike']);
     Route::post('/feed/comment/{id}', [FeedController::class, 'makeComment']);
     Route::post('/feed/savefeed/{id}', [FeedController::class, 'saveFeed']);
     Route::get('/feed/savefeed', [FeedController::class, 'getSavedFeeds']);
