@@ -14,10 +14,24 @@ class FeedController extends Controller
 
     public function index() 
     {
+        $feeds_id = Feed::with('user')->with('user.profile')->withCount('reactions')->get()->pluck('id')->toArray();
         $feeds = Feed::with('user')->with('user.profile')->withCount('reactions')->get();
-        return response([
-            'feeds' => $feeds
-        ], 200);
+
+        foreach($feeds as $feed) {
+            $feed_like = Reaction::where('user_id', auth()->id())->where('id', $feed->id)->first();
+            if($feed_like) {
+                $like = true;
+            }else{
+               $like = false;
+            }
+
+            return response([
+                'feed' => $feeds,
+                'like' => $like
+            ]);
+        }
+
+        
     }
 
     public function store(Request $request)
