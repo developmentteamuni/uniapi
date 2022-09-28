@@ -12,26 +12,12 @@ use Illuminate\Http\Request;
 class FeedController extends Controller
 {
 
-    public function index() 
+    public function index()
     {
-        $feeds_id = Feed::with('user')->with('user.profile')->withCount('reactions')->get()->pluck('id')->toArray();
-        $feeds = Feed::with('user')->with('user.profile')->withCount('reactions')->get();
-
-        foreach($feeds as $feed) {
-            $feed_like = Reaction::where('user_id', auth()->id())->where('id', $feed->id)->first();
-            if($feed_like) {
-                $like = true;
-            }else{
-               $like = false;
-            }
-
-            return response([
-                'feed' => $feeds,
-                'like' => $like
-            ]);
-        }
-
-        
+        $feeds = Feed::with('user')->with('user.profile')->get();
+        return response([
+            'feed' => $feeds,
+        ]);
     }
 
     public function store(Request $request)
@@ -46,12 +32,12 @@ class FeedController extends Controller
         ];
 
         $image = $request->file('image');
-        $imageName = date('YmHdi').$image->getClientOriginalName();
+        $imageName = date('YmHdi') . $image->getClientOriginalName();
         $image->move(public_path('public/feedImages'), $imageName);
         $datatosave['image'] = $imageName;
 
         $feed = auth()->user()->feeds()->create($datatosave);
-        if(!$feed)
+        if (!$feed)
             return response([
                 'message' => 'Error posting data'
             ], 500);
@@ -66,12 +52,12 @@ class FeedController extends Controller
     {
         $reaction = Reaction::where([['feed_id', $feed_id], ['user_id', auth()->id()]])->first();
 
-        if(!empty($reaction)) {
+        if (!empty($reaction)) {
             $reaction->delete();
             return response([
                 'message' => 'Unliked'
             ], 200);
-        }else{
+        } else {
             Reaction::create([
                 'feed_id' => $feed_id,
                 'user_id' => auth()->id()
@@ -86,10 +72,10 @@ class FeedController extends Controller
         ], 500);
     }
 
-    public function comments($feed_id) 
+    public function comments($feed_id)
     {
         $comments = Comment::with('user')->where('feed_id', $feed_id)->latest()->get();
-        if($comments)
+        if ($comments)
             return response([
                 'comments' => $comments
             ], 200);
@@ -112,7 +98,7 @@ class FeedController extends Controller
             'body' => $request->body
         ]);
 
-        if($comment)
+        if ($comment)
             return response([
                 'message' => 'Commented'
             ], 201);
@@ -129,7 +115,7 @@ class FeedController extends Controller
             'feed_id' => $feed_id
         ]);
 
-        if($saved)
+        if ($saved)
             return response([
                 'message' => 'Saved'
             ],  201);
@@ -143,7 +129,7 @@ class FeedController extends Controller
     {
         $savedFeeds = SavedFeed::with('feed')->where('user_id', auth()->id())->latest()->get();
 
-        if($savedFeeds)
+        if ($savedFeeds)
             return response([
                 'savedfeeds' => $savedFeeds
             ], 200);
@@ -151,11 +137,10 @@ class FeedController extends Controller
         return response([
             'message' => 'Error fetching saved feeds'
         ], 500);
-
     }
 
 
-    public function deleteFeed(Feed $feed) 
+    public function deleteFeed(Feed $feed)
     {
         $feed->delete();
 
@@ -167,11 +152,11 @@ class FeedController extends Controller
     public function checkLike($user_id, $feed_id)
     {
         $check = Feed::where('user_id', $user_id)->where('id', $feed_id)->first();
-        if($check) {
+        if ($check) {
             return response([
                 'message' => 'Liked'
             ], 200);
-        }else{
+        } else {
             return response([
                 'message' => 'Not liked'
             ], 200);
