@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/user/profile/{id}', [ProfileController::class, 'index']);
     Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
+    Route::post('/user/follow/{userID}', [\App\Http\Controllers\User\FriendController::class, 'followUser']);
+    Route::get('/user/follow/{userID}', [\App\Http\Controllers\User\FriendController::class, 'checkIfFreinds']);
     Route::post('/user/profile/updateimage', [ProfileController::class, 'updateImage']);
     Route::get('/user/recents', [ProfileController::class, 'getRecentPosts']);
     Route::get('/feed', [FeedController::class, 'index']);

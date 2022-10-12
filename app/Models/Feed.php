@@ -11,7 +11,7 @@ class Feed extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $appends = ['reacted'];
+    protected $appends = ['reacted', 'saved'];
 
     public function user()
     {
@@ -28,8 +28,18 @@ class Feed extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function savefeeds()
+    {
+        return $this->hasMany(SavedFeed::class);
+    }
+
     public function getReactedAttribute()
     {
         return (bool) $this->reactions()->where('feed_id', $this->id)->where('user_id', Auth::user()->id)->count();
+    }
+
+    public function getSavedAttribute()
+    {
+        return (bool) $this->savefeeds()->where('feed_id', $this->id)->where('user_id', Auth::user()->id)->count();
     }
 }
