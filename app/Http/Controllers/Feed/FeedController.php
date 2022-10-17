@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Models\Feed;
 use App\Models\Reaction;
 use App\Models\SavedFeed;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FeedController extends Controller
@@ -15,6 +16,17 @@ class FeedController extends Controller
     public function index()
     {
         $feeds = Feed::with('user')->with('user.profile')->get();
+        return response([
+            'feed' => $feeds,
+        ]);
+    }
+
+    public function following()
+    {
+        $feeds = Feed::join('friends', 'feeds.user_id', '=', 'friends.follower_id')
+            ->with('user.follower.user')
+            ->where('friends.user_id', auth()->id())
+            ->latest('friends.created_at')->get();
         return response([
             'feed' => $feeds,
         ]);
