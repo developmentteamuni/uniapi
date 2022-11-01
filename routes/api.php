@@ -8,6 +8,7 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\User\EventController;
 use App\Http\Controllers\User\MessagesController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\UserLists;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/events/explore', [EventController::class, 'explore']);
     Route::get('/event/attendance/{eventId}', [EventController::class, 'getAttendance']);
     Route::post('/event/scanTicket/{eventId}', [EventController::class, 'scanTicket']);
+    Route::get('/users', [UserLists::class, 'index']);
 });
 
 Route::post('checkemail', [AuthController::class, 'checkEmail']);
