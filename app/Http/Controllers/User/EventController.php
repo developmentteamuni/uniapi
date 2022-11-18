@@ -57,7 +57,8 @@ class EventController extends Controller
 
     public function getFriendsToInvite()
     {
-        $friends = Friend::where('user_id', auth()->id())->pluck('follower_id');
+        $getIds = Friend::where('user_id', auth()->id())->pluck('follower_id')->toArray();
+        $friends = User::whereIn('id', $getIds)->get();
 
         return response([
             'friends' => $friends

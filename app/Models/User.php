@@ -61,7 +61,7 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
-    public function follower()
+    public function followers()
     {
         return $this->hasMany(Friend::class);
     }

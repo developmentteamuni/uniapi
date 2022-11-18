@@ -5,6 +5,7 @@ use App\Http\Controllers\Feed\FeedController;
 use App\Http\Controllers\General\CoursesController;
 use App\Http\Controllers\General\UniversityController;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\User\EventController;
 use App\Http\Controllers\User\MessagesController;
 use App\Http\Controllers\User\ProfileController;
@@ -49,6 +50,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/events/explore', [EventController::class, 'explore']);
     Route::get('/event/attendance/{eventId}', [EventController::class, 'getAttendance']);
     Route::post('/event/scanTicket/{eventId}', [EventController::class, 'scanTicket']);
+    Route::post('/event/pay', [PaymentController::class, 'pay']);
+    Route::get('/event/success', [PaymentController::class, 'success']);
     Route::get('/users', [UserLists::class, 'index']);
 });
 
