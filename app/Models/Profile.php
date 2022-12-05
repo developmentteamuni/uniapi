@@ -15,4 +15,11 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $casts = [
+        'minor' => 'json',
+        'major' => 'json',
+        'hobbies' => 'json',
+        'interests' => 'json',
+    ];
 }

@@ -139,7 +139,7 @@ class FeedController extends Controller
 
     public function getSavedFeeds()
     {
-        $savedFeeds = SavedFeed::with('feed')->where('user_id', auth()->id())->latest()->get();
+        $savedFeeds = SavedFeed::with('feed.user:id,firstname,lastname')->where('user_id', auth()->id())->latest()->get();
 
         if ($savedFeeds)
             return response([

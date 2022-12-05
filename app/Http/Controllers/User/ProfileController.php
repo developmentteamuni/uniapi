@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserProfileResource;
 use App\Models\Feed;
 use App\Models\Profile;
 use App\Models\User;
@@ -15,9 +16,9 @@ class ProfileController extends Controller
     {
         $user = User::with('profile')->find($id);
 
-        if($user)
+        if ($user)
             return response([
-                'user' => $user
+                'user' => new UserProfileResource($user)
             ], 200);
 
         return response([
@@ -29,11 +30,11 @@ class ProfileController extends Controller
     {
         $feeds = Feed::where('user_id', auth()->id())->latest()->get();
 
-        if($feeds)
+        if ($feeds)
             return response([
                 'feeds' => $feeds
             ], 201);
-        
+
         return response([
             'message' => 'Error fetching data'
         ], 500);
@@ -41,16 +42,13 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
+        $getuserprofile = Profile::where('user_id', auth()->id())->first();
         $request->validate([
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'age' => 'required',
-            'email' => 'required|email|unique:users,email,' .auth()->id(),
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
             'year' => 'required',
-            'major' => 'required',
-            'minor' => 'required',
-            'hobbies' => 'required',
-            'interests' => 'required',
         ]);
 
         // user data to update {user table}
@@ -58,7 +56,6 @@ class ProfileController extends Controller
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'email' => $request->email,
-            'major' => $request->major,
         ];
 
         // update user
@@ -70,53 +67,88 @@ class ProfileController extends Controller
             'user_id' => auth()->id(),
             'age' => $request->age,
             'year' => $request->year,
-            'minor' => $request->minor,
-            'hobbies' => $request->hobbies,
-            'interests' => $request->interests,
-            'profileImg' => 'No Image'
+            'profileImg' => 'No Image',
+            'minor' => auth()->user()->profile->minor ?? '',
+            'major' => auth()->user()->profile->major ?? '',
+            'hobbies' => auth()->user()->profile->hobbies ?? '',
+            'interests' => auth()->user()->profile->interests ?? '',
         ];
-            // get profile
-            $getprofile = Profile::where('user_id', auth()->id())->first();
-            if($getprofile) {
-                $profile = Profile::where('user_id', auth()->id())->update($profiledata);
-                if(!$profile){
-                    return response([
-                        'message' => 'Error updating profile'
-                    ], 500);
-                }else{
-                    return response([
-                        'user' => User::with('profile')->find(auth()->id()),
-                    ], 201);
-                }
-            }else{
-                $profile = Profile::create($profiledata);
-                if(!$profile){
-                    return response([
-                        'message' => 'Error updating profile'
-                    ], 500);
-                }else{
-                    return response([
-                        'user' => User::with('profile')->find(auth()->id()),
-                    ], 201);
-                }
+        // get profile
+        $getprofile = Profile::where('user_id', auth()->id())->first();
+        if ($getprofile) {
+            $profile = Profile::where('user_id', auth()->id())->update($profiledata);
+            if (!$profile) {
+                return response([
+                    'message' => 'Error updating profile'
+                ], 500);
+            } else {
+                return response([
+                    'user' => User::with('profile')->find(auth()->id()),
+                ], 201);
             }
+        } else {
+            $profile = Profile::create($profiledata);
+            if (!$profile) {
+                return response([
+                    'message' => 'Error updating profile'
+                ], 500);
+            } else {
+                return response([
+                    'user' => User::with('profile')->find(auth()->id()),
+                ], 201);
+            }
+        }
+    }
+
+    public function otherProfileData(Request $request)
+    {
+
+        $getprofile = Profile::where('user_id', auth()->id())->first();
+        if ($getprofile) {
+
+            Profile::where('user_id', auth()->id())->update([
+                'major' => json_encode($request->major),
+                'minor' => json_encode($request->minor),
+                'hobbies' => json_encode($request->hobbies),
+                'interests' => json_encode($request->interests),
+            ]);
+
+            return response([
+                'message' => 'success'
+            ], 201);
+        } else {
+            Profile::create([
+                'age' => '',
+                'year' => '',
+                'profileImg' => '',
+                'major' => json_encode($request->major),
+                'minor' => json_encode($request->minor),
+                'hobbies' => json_encode($request->hobbies),
+                'interests' => json_encode($request->interests),
+                'user_id' => auth()->id(),
+            ]);
+
+            return response([
+                'message' => 'success'
+            ], 201);
+        }
     }
 
     public function updateImage(Request $request)
     {
-            $profiledata = [];
-            $image = $request->file('profileImg');
-            $imageName = date('YmdHi').$image->getClientOriginalName();
-            $image->move(public_path('public/profileImages'), $imageName);
-            $profiledata['profileImg'] = $imageName;
+        $profiledata = [];
+        $image = $request->file('profileImg');
+        $imageName = date('YmdHi') . $image->getClientOriginalName();
+        $image->move(public_path('public/profileImages'), $imageName);
+        $profiledata['profileImg'] = $imageName;
 
-            $profile = Profile::where('user_id', auth()->id())->update($profiledata);
+        $profile = Profile::where('user_id', auth()->id())->update($profiledata);
 
-            if(!$profile)
-                return response([
-                    'message' => 'Error updating profile'
-                ], 500);
-            
+        if (!$profile)
+            return response([
+                'message' => 'Error updating profile'
+            ], 500);
+
         return response([
             'message' => 'profile updated'
         ], 201);

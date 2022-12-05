@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FriendsResource;
 use App\Models\Friend;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,5 +46,14 @@ class FriendController extends Controller
                 'message' => false
             ], 200);
         }
+    }
+
+    public function getMyFriends()
+    {
+        $friends = User::where('id', auth()->id())->with('followers.follower')->get();
+
+        return response([
+            'friends' => FriendsResource::collection($friends)
+        ], 200);
     }
 }
