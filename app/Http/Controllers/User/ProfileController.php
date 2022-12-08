@@ -136,11 +136,17 @@ class ProfileController extends Controller
 
     public function updateImage(Request $request)
     {
+
+        $request->validate([
+            'profileImg' => 'required|url'
+        ]);
+        $image =  $request->profileImg;
+
         $profiledata = [];
-        $image = $request->file('profileImg');
-        $imageName = date('YmdHi') . $image->getClientOriginalName();
-        $image->move(public_path('public/profileImages'), $imageName);
-        $profiledata['profileImg'] = $imageName;
+        // $image = $request->file('profileImg');
+        // $imageName = date('YmdHi') . $image->getClientOriginalName();
+        // $image->move(public_path('public/profileImages'), $imageName);
+        $profiledata['profileImg'] = $image;
 
         $profile = Profile::where('user_id', auth()->id())->update($profiledata);
 
