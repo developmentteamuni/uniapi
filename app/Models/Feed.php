@@ -10,7 +10,7 @@ class Feed extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = ['body', 'image'];
     protected $appends = ['reacted', 'saved'];
 
     public function user()

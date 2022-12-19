@@ -35,7 +35,6 @@ class FeedController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image',
             'body' => 'required|max:225'
         ]);
 
@@ -43,11 +42,17 @@ class FeedController extends Controller
             'body' => $request->body
         ];
 
-        $image = $request->file('image');
-        $imageName = date('YmHdi') . $image->getClientOriginalName();
-        $image->move(public_path('public/feedImages'), $imageName);
-        $datatosave['image'] = $imageName;
 
+        $image = $request->file('image');
+        if (!empty($image)) {
+            $request->validate([
+                'image' => 'image',
+            ]);
+
+            $imageName = date('YmHdi') . $image->getClientOriginalName();
+            $image->move(public_path('public/feedImages'), $imageName);
+            $datatosave['image'] = $imageName;
+        }
         $feed = auth()->user()->feeds()->create($datatosave);
         if (!$feed)
             return response([

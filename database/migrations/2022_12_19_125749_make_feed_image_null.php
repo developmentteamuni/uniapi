@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('profiles', function (Blueprint $table) {
-            $table->json('minor')->nullable(true)->change();
-            $table->json('hobbies')->nullable(true)->change();
-            $table->json('interests')->nullable(true)->change();
+        Schema::table('feeds', function (Blueprint $table) {
+            $table->string('image')->nullable(true)->change();
         });
     }
 
@@ -27,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('profiles', function (Blueprint $table) {
+        Schema::table('feeds', function (Blueprint $table) {
             //
         });
     }

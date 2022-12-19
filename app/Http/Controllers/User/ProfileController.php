@@ -9,6 +9,7 @@ use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class ProfileController extends Controller
 {
@@ -67,11 +68,11 @@ class ProfileController extends Controller
             'user_id' => auth()->id(),
             'age' => $request->age,
             'year' => $request->year,
-            'profileImg' => 'No Image',
-            'minor' => auth()->user()->profile->minor ?? '',
-            'major' => auth()->user()->profile->major ?? '',
-            'hobbies' => auth()->user()->profile->hobbies ?? '',
-            'interests' => auth()->user()->profile->interests ?? '',
+            'profileImg' => 'https://ui-avatars.com/api/?name=' . $request->firstname . '+' . $request->lastname,
+            'minor' => auth()->user()->profile->minor ?? [],
+            'major' => auth()->user()->profile->major ?? [],
+            'hobbies' => auth()->user()->profile->hobbies ?? [],
+            'interests' => auth()->user()->profile->interests ?? [],
         ];
         // get profile
         $getprofile = Profile::where('user_id', auth()->id())->first();
@@ -120,7 +121,7 @@ class ProfileController extends Controller
             Profile::create([
                 'age' => '',
                 'year' => '',
-                'profileImg' => '',
+                'profileImg' => 'https://ui-avatars.com/api/?name=' . $request->firstname . '+' . $request->lastname,
                 'major' => json_encode($request->major),
                 'minor' => json_encode($request->minor),
                 'hobbies' => json_encode($request->hobbies),
@@ -148,15 +149,38 @@ class ProfileController extends Controller
         // $image->move(public_path('public/profileImages'), $imageName);
         $profiledata['profileImg'] = $image;
 
-        $profile = Profile::where('user_id', auth()->id())->update($profiledata);
-
-        if (!$profile)
-            return response([
-                'message' => 'Error updating profile'
-            ], 500);
-
-        return response([
-            'message' => 'profile updated'
-        ], 201);
+        $profile = Profile::where('user_id', auth()->id())->first();
+        if ($profile) {
+            $save_profile = Profile::where('user_id', auth()->id())->update($profiledata);
+            if (!$save_profile) {
+                return response([
+                    'message' => 'Error updating profile'
+                ], 500);
+            } else {
+                return response([
+                    'message' => 'profile updated'
+                ], 201);
+            }
+        } else {
+            $create_profile = Profile::create([
+                'age' => '',
+                'year' => '',
+                'profileImg' => $request->profileImg,
+                'major' => [],
+                'minor' => [],
+                'hobbies' => [],
+                'interests' => [],
+                'user_id' => auth()->id(),
+            ]);
+            if (!$create_profile) {
+                return response([
+                    'message' => 'Error updating profile'
+                ], 500);
+            } else {
+                return response([
+                    'message' => 'profile updated'
+                ], 201);
+            }
+        }
     }
 }
