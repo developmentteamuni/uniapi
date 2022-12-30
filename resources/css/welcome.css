@@ -1,0 +1,27 @@
+.logo {
+    height: 50px;
+    width: 50px;
+}
+
+.navBar {
+    display: flex;
+    height: 120px;
+    align-items: center;
+    color: white;
+    padding: 0 50px;
+    justify-content: space-between;
+}
+
+.navItems {
+    color: black;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.downloadButton {
+    background-color: #fdbe49;
+    border-radius: 10px;
+    height: 60px;
+    width: 180px;
+}
