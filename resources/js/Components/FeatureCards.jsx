@@ -1,6 +1,6 @@
-//TODO Export data into types we can use between cms and front end
-//TODO Begin work on user authentication so we can do the below
-//TODO Begin work on cms
+// TODO: Export data into types we can use between cms and front end
+// TODO: Begin work on user authentication so we can do the below
+// TODO: Begin work on cms
 export default function FeatureCards() {
     return (
         <div
