@@ -1,0 +1,80 @@
+.hero {
+    display: flex;
+    width: 100%;
+}
+
+.heroImgContainer {
+    display: flex;
+    position: relative;
+}
+
+.heroImg {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.heroImgBackground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    background: #fdbe49;
+    filter: blur(217.5px);
+    display: flex;
+}
+
+.heroContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 100px 0 0;
+}
+
+.heroEyeBrow {
+    color: #141414;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 40px;
+}
+
+.heroHeader {
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 80px;
+}
+
+.heroSearchContainer {
+    display: flex;
+    position: relative;
+    padding: 12px 0 0 0;
+}
+
+.heroSearchContainer button {
+    background-color: #ececee;
+    width: 125px;
+    height: 50px;
+    border-radius: 8px;
+    opacity: 0.6;
+    margin: 0 0 0 10px;
+}
+
+.heroSearchContainer .searchImg {
+    position: absolute;
+    align-self: center;
+    display: flex;
+    padding: 0 0 0 25px;
+}
+
+.heroSearchContainer input {
+    background-color: #ececee;
+    height: 50px;
+    width: 500px;
+    opacity: 0.6;
+    border-radius: 8px;
+    position: relative;
+    margin: 0 0 0 0;
+    padding: 0 0 0 50px;
+}
