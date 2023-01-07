@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Models\Friend;
 use App\Models\Ticket;
@@ -23,12 +24,12 @@ class EventController extends Controller
             'ticket_count' => 'required',
             'recommended_donation_box' => 'required',
             'ticket_price' => 'required',
-            'image' => 'image',
-            'invited_users' => 'required'
+            'image' => 'required|image',
+            // 'invited_users' => 'required'
         ]);
 
         $dataToCreate = [
-            'hoster_id' => $request->hoster_id,
+            'hoster_id' => auth()->id(),
             'event_title' => $request->event_title,
             'location' => $request->location,
             'date' => $request->date,
@@ -38,7 +39,7 @@ class EventController extends Controller
             'recommended_donation_box' => $request->recommended_donation_box,
             'ticket_price' => $request->ticket_price,
             'image' => $request->image,
-            'user_id' => $request->invited_users,
+            'user_id' => [],
         ];
 
         $image = $request->file('image');
@@ -106,7 +107,16 @@ class EventController extends Controller
         $events = Event::latest()->get();
 
         return response([
-            'events' => $events
+            'events' => EventResource::collection($events),
+        ], 200);
+    }
+
+    public function getEvent($id)
+    {
+        $event = Event::whereId($id)->first();
+
+        return response([
+            'events' => new EventResource($event),
         ], 200);
     }
 }

@@ -141,6 +141,9 @@ class ProfileController extends Controller
         $request->validate([
             'profileImg' => 'required|url'
         ]);
+
+        // print_r($request->all());
+
         $image =  $request->profileImg;
 
         $profiledata = [];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Feed;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProfileController;
 use App\Models\Comment;
 use App\Models\Feed;
 use App\Models\Reaction;
@@ -17,7 +18,7 @@ class FeedController extends Controller
     {
         $feeds = Feed::with('user')->with('user.profile')->get();
         return response([
-            'feed' => $feeds,
+            'feed' => ProfileController::collection($feeds),
         ]);
     }
 
