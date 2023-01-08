@@ -9,6 +9,7 @@ use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\User\EventController;
 use App\Http\Controllers\User\MessagesController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\RooomateController;
 use App\Http\Controllers\UserLists;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -54,6 +55,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/event/attendance/{eventId}', [EventController::class, 'getAttendance']);
     Route::post('/event/scanTicket/{eventId}', [EventController::class, 'scanTicket']);
     Route::post('/event/pay/{eventId}', [PaymentController::class, 'pay']);
+    Route::post('/room/create', [RooomateController::class, 'store']);
     Route::get('/users', [UserLists::class, 'index']);
 });
 
