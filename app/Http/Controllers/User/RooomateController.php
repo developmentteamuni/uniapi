@@ -4,12 +4,25 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoomateRequest;
+use App\Http\Resources\RoomResource;
 use App\Models\Roomate;
 use App\Models\RoomImage;
 use Illuminate\Http\Request;
 
 class RooomateController extends Controller
 {
+
+
+    public function index()
+    {
+        $rooms = Roomate::latest()->get();
+
+        return response([
+            'rooms' => RoomResource::collection($rooms)
+        ], 200);
+    }
+
+
     public function store(RoomateRequest $roomateRequest)
     {
         $roomateRequest->validated();
@@ -66,5 +79,15 @@ class RooomateController extends Controller
                 'message' => 'Error creating room',
             ], 400);
         }
+    }
+
+    public function view($room_id)
+    {
+
+        $room = Roomate::with('roomImage')->whereId($room_id)->first();
+
+        return response([
+            'room' => $room,
+        ], 200);
     }
 }

@@ -56,6 +56,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/event/scanTicket/{eventId}', [EventController::class, 'scanTicket']);
     Route::post('/event/pay/{eventId}', [PaymentController::class, 'pay']);
     Route::post('/room/create', [RooomateController::class, 'store']);
+    Route::get('/rooms', [RooomateController::class, 'index']);
+    Route::get('/room/{room}', [RooomateController::class, 'view']);
     Route::get('/users', [UserLists::class, 'index']);
 });
 
