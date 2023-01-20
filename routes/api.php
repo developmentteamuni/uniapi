@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Feed\FeedController;
+use App\Http\Controllers\Feed\GroupController;
 use App\Http\Controllers\General\CoursesController;
 use App\Http\Controllers\General\UniversityController;
 use App\Http\Controllers\GeneralController;
@@ -56,6 +57,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/event/scanTicket/{eventId}', [EventController::class, 'scanTicket']);
     Route::post('/event/pay/{eventId}', [PaymentController::class, 'pay']);
     Route::post('/room/create', [RooomateController::class, 'store']);
+    Route::post('/group/create', [GroupController::class, 'store']);
+    Route::get('/groups', [GroupController::class, 'index']);
+    Route::get('/mygroups', [GroupController::class, 'myGroup']);
+    Route::post('/joingroup/{group_id}', [GroupController::class, 'joinGroup']);
+    Route::get('/checkuser/{group_id}', [GroupController::class, 'checkIfInGroup']);
+    Route::post('/createGroupPost', [GroupController::class, 'createGroupPost']);
+    Route::get('/fetchGroupPost/{group_id}', [GroupController::class, 'fetchGroupPost']);
     Route::get('/rooms', [RooomateController::class, 'index']);
     Route::get('/room/{room}', [RooomateController::class, 'view']);
     Route::get('/users', [UserLists::class, 'index']);
