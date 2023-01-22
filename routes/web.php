@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Web\FeaturesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FeaturesController::class, 'index']);
 
 
 Route::get('/event/success/{userID}', [PaymentController::class, 'success']);
