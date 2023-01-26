@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/getuljbj/public_html/
+    - php artisan deploy
