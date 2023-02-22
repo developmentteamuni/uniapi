@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Web\FeaturesController;
+use App\Http\Controllers\Web\LegalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [FeaturesController::class, 'index']);
+
+Route::get('/legal', [LegalController::class, 'index']);
 
 
 Route::get('/event/success/{userID}', [PaymentController::class, 'success']);
