@@ -20,7 +20,7 @@ class FriendsResource extends JsonResource
                 'user_id' => $follower->follower->id,
                 'firstname' => $follower->follower->firstname,
                 'lastname' => $follower->follower->lastname,
-                'profileImg' => $follower->follower->profile->profileImg ?? null,
+                'profileImg' => $follower->follower->profile->profileImg ?? 'https://ui-avatars.com/api/?name=' . $follower->follower->firstname . '+' . $follower->follower->lastname,
             ];
         }
 
