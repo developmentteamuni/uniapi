@@ -27,17 +27,17 @@ class AuthController extends Controller
             'email' => $registerRequest->email,
             'password' => Hash::make($registerRequest->password),
         ]);
-        if($user) {
+        if ($user) {
             $details = [
                 'title' => 'Verify your email address',
                 'body' => $otp
             ];
 
-            Mail::to($registerRequest->email)->send(new OtpMail($details));
+            // Mail::to($registerRequest->email)->send(new OtpMail($details));
             return response([
                 'message' => 'Verify OTP'
             ], 201);
-        }else{
+        } else {
             return response([
                 'message' => 'Error creating user'
             ], 400);
@@ -51,35 +51,34 @@ class AuthController extends Controller
         ]);
 
         $userverified = User::where('email', $request->email)->first();
-        if(!$userverified) {
+        if (!$userverified) {
             return response([
                 'message' => 'Error verifying user'
             ], 400);
         }
-        if($userverified->otp == 'verified')
-        {
+        if ($userverified->otp == 'verified') {
             return response([
                 'message' => 'Account has already been verified'
             ], 400);
-        }else{
+        } else {
 
-        $user = User::where([['email', $request->email], ['otp', $request->otp]])->first();
+            $user = User::where([['email', $request->email], ['otp', $request->otp]])->first();
 
-        if($user) {
-            auth()->login($user, true);
-            $user = User::where('email', $request->email)->update(['otp' => 'verified']);
-            $token = auth()->user()->createToken('authToken')->plainTextToken;
+            if ($user) {
+                auth()->login($user, true);
+                $user = User::where('email', $request->email)->update(['otp' => 'verified']);
+                $token = auth()->user()->createToken('authToken')->plainTextToken;
 
-            return response([
-                'user' => auth()->user(),
-                'token' => $token
-            ], 200);
-        }else{
-            return response([
-                'message' => 'Incorrect Otp'
-            ], 400);
+                return response([
+                    'user' => auth()->user(),
+                    'token' => $token
+                ], 200);
+            } else {
+                return response([
+                    'message' => 'Incorrect Otp'
+                ], 400);
+            }
         }
-    }
     }
 
     public function login(LoginRequest $loginRequest)
@@ -89,7 +88,7 @@ class AuthController extends Controller
         // check user
 
         $user = User::where('email', $loginRequest->email)->first();
-        if(!$user || !Hash::check($loginRequest->password, $user->password)) {
+        if (!$user || !Hash::check($loginRequest->password, $user->password)) {
             return response([
                 'message' => 'Incorrect credentials'
             ], 400);
@@ -101,7 +100,6 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token
         ], 200);
-
     }
 
     public function checkEmail(Request $request)
@@ -112,15 +110,14 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if(!$user)
+        if (!$user)
             return response([
                 'message' => 'User not found'
             ], 400);
-        
+
         return response([
             'message' => 'success'
         ], 200);
-        
     }
 
     public function changePassword(Request $request)
@@ -132,7 +129,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->update(['password' => Hash::make($request->password)]);
 
-        if(!$user)
+        if (!$user)
             return response([
                 'message' => 'Error changing password'
             ], 400);

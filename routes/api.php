@@ -14,6 +14,7 @@ use App\Http\Controllers\User\RooomateController;
 use App\Http\Controllers\UserLists;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +68,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/rooms', [RooomateController::class, 'index']);
     Route::get('/room/{room}', [RooomateController::class, 'view']);
     Route::get('/users', [UserLists::class, 'index']);
+});
+
+Route::get('/hash', function () {
+    return Hash::make('Oladel12');
 });
 
 

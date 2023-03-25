@@ -11,7 +11,7 @@ class Feed extends Model
     use HasFactory;
 
     protected $fillable = ['body', 'image'];
-    protected $appends = ['reacted', 'saved'];
+    protected $appends = ['reacted', 'saved', 'likedby'];
 
     public function user()
     {
@@ -36,6 +36,12 @@ class Feed extends Model
     public function getReactedAttribute()
     {
         return (bool) $this->reactions()->where('feed_id', $this->id)->where('user_id', Auth::user()->id)->count();
+    }
+
+    public function getLikedByAttribute()
+    {
+        $first_liked = $this->reactions()->inRandomOrder()->limit(1)->pluck('user_id');
+        return $this->reactions()->count() > 0 ? User::whereId($first_liked)->pluck('firstname')->first() . ' ' .  'and others' : '';
     }
 
     public function getSavedAttribute()

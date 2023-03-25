@@ -18,6 +18,13 @@ class GroupResource extends JsonResource
             'id' => $this->id,
             'group_name' => $this->group_name,
             'description' => $this->description,
+            'requirements' => $this->requirements,
+            'link' => $this->link,
+            'entrace' => $this->entrace,
+            'describe' => $this->describe,
+            'attendance' => $this->attendance,
+            'fee' => $this->fee,
+            'group_type' => $this->group_type,
             'images' => GroupImageResources::collection($this->groupImage)
         ];
     }

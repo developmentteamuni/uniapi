@@ -138,6 +138,7 @@ class GroupController extends Controller
         ];
 
 
+
         $image = $request->file('image');
         if (!empty($image)) {
             $request->validate([

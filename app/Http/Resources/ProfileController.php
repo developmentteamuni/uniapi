@@ -17,13 +17,14 @@ class ProfileController extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'fullname' => $this->user->firstname . '+' . $this->user->lastname,
+            'fullname' => $this->user->firstname . ' ' . $this->user->lastname,
             'body' => $this->body,
-            'image' => $this->image,
+            'image' => env('APP_URL') . '/public/' . $this->image,
             'created_at' => $this->created_at,
             'reacted' => $this->reacted,
             'saved' => $this->saved,
             'profileImg' => $this->user->profile->profileImg ?? 'https://ui-avatars.com/api/?name=' . $this->user->firstname . '+' . $this->user->lastname,
+            'liked_by' => $this->likedby,
         ];
     }
 }

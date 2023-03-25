@@ -92,7 +92,7 @@ class FeedController extends Controller
 
     public function comments($feed_id)
     {
-        $comments = Comment::with('user')->where('feed_id', $feed_id)->latest()->get();
+        $comments = Comment::with('user.profile')->where('feed_id', $feed_id)->latest()->get();
         if ($comments)
             return response([
                 'comments' => $comments
@@ -100,7 +100,7 @@ class FeedController extends Controller
 
         return response([
             'message' => 'Something went wrong'
-        ], 200);
+        ], 500);
     }
 
     public function makeComment(Request $request, $feed_id)
