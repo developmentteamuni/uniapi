@@ -19,7 +19,7 @@ class ProfileController extends JsonResource
             'user_id' => $this->user_id,
             'fullname' => $this->user->firstname . ' ' . $this->user->lastname,
             'body' => $this->body,
-            'image' => env('APP_URL') . '/public/' . $this->image,
+            'image' => env('APP_URL') . '/public/feedImages/' . $this->image,
             'created_at' => $this->created_at,
             'reacted' => $this->reacted,
             'saved' => $this->saved,

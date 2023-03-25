@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Feed;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentResources;
 use App\Http\Resources\ProfileController;
 use App\Models\Comment;
 use App\Models\Feed;
@@ -95,7 +96,7 @@ class FeedController extends Controller
         $comments = Comment::with('user.profile')->where('feed_id', $feed_id)->latest()->get();
         if ($comments)
             return response([
-                'comments' => $comments
+                'comments' => CommentResources::collection($comments)
             ], 200);
 
         return response([
