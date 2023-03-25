@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProfileController as ResourcesProfileController;
 use App\Http\Resources\UserProfileResource;
 use App\Models\Feed;
 use App\Models\Profile;
@@ -33,8 +34,8 @@ class ProfileController extends Controller
 
         if ($feeds)
             return response([
-                'feeds' => $feeds
-            ], 201);
+                'feeds' => ResourcesProfileController::collection($feeds)
+            ], 200);
 
         return response([
             'message' => 'Error fetching data'
