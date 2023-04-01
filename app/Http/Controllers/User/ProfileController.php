@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProfileController as ResourcesProfileController;
 use App\Http\Resources\UserProfileResource;
 use App\Models\Feed;
+use App\Models\Hobby;
+use App\Models\Interest;
+use App\Models\Minor;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -70,10 +73,6 @@ class ProfileController extends Controller
             'age' => $request->age,
             'year' => $request->year,
             'profileImg' => 'https://ui-avatars.com/api/?name=' . $request->firstname . '+' . $request->lastname,
-            'minor' => auth()->user()->profile->minor ?? [],
-            'major' => auth()->user()->profile->major ?? [],
-            'hobbies' => auth()->user()->profile->hobbies ?? [],
-            'interests' => auth()->user()->profile->interests ?? [],
         ];
         // get profile
         $getprofile = Profile::where('user_id', auth()->id())->first();
@@ -102,37 +101,60 @@ class ProfileController extends Controller
         }
     }
 
-    public function otherProfileData(Request $request)
+    public function updateHobby(Request $request)
     {
-
-        $getprofile = Profile::where('user_id', auth()->id())->first();
-        if ($getprofile) {
-
-            Profile::where('user_id', auth()->id())->update([
-                'major' => json_encode($request->major),
-                'minor' => json_encode($request->minor),
-                'hobbies' => json_encode($request->hobbies),
-                'interests' => json_encode($request->interests),
-            ]);
-
+        try {
+            for ($i = 0; $i < count($request->hobby); $i++) {
+                Hobby::create([
+                    'hobby' => $request->hobby[$i],
+                    'user_id' => auth()->id(),
+                ]);
+            }
             return response([
                 'message' => 'success'
-            ], 201);
-        } else {
-            Profile::create([
-                'age' => '',
-                'year' => '',
-                'profileImg' => 'https://ui-avatars.com/api/?name=' . $request->firstname . '+' . $request->lastname,
-                'major' => json_encode($request->major),
-                'minor' => json_encode($request->minor),
-                'hobbies' => json_encode($request->hobbies),
-                'interests' => json_encode($request->interests),
-                'user_id' => auth()->id(),
             ]);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 
+    public function updateInterest(Request $request)
+    {
+        try {
+            for ($i = 0; $i < count($request->interest); $i++) {
+                Interest::create([
+                    'interest' => $request->interest[$i],
+                    'user_id' => auth()->id(),
+                ]);
+            }
             return response([
                 'message' => 'success'
-            ], 201);
+            ]);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateMinor(Request $request)
+    {
+        try {
+            for ($i = 0; $i < count($request->minor); $i++) {
+                Minor::create([
+                    'minor' => $request->minor[$i],
+                    'user_id' => auth()->id(),
+                ]);
+            }
+            return response([
+                'message' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -140,18 +162,18 @@ class ProfileController extends Controller
     {
 
         $request->validate([
-            'profileImg' => 'required|url'
+            'profileImg' => 'required|image'
         ]);
 
         // print_r($request->all());
 
-        $image =  $request->profileImg;
+        // $image =  $request->profileImg;
 
         $profiledata = [];
-        // $image = $request->file('profileImg');
-        // $imageName = date('YmdHi') . $image->getClientOriginalName();
-        // $image->move(public_path('public/profileImages'), $imageName);
-        $profiledata['profileImg'] = $image;
+        $image = $request->file('profileImg');
+        $imageName = date('YmdHi') . $image->getClientOriginalName();
+        $image->move(public_path('public/profileImages'), $imageName);
+        $profiledata['profileImg'] = $imageName;
 
         $profile = Profile::where('user_id', auth()->id())->first();
         if ($profile) {
@@ -167,13 +189,7 @@ class ProfileController extends Controller
             }
         } else {
             $create_profile = Profile::create([
-                'age' => '',
-                'year' => '',
                 'profileImg' => $request->profileImg,
-                'major' => [],
-                'minor' => [],
-                'hobbies' => [],
-                'interests' => [],
                 'user_id' => auth()->id(),
             ]);
             if (!$create_profile) {

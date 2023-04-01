@@ -16,10 +16,15 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected $casts = [
-        'minor' => 'json',
-        'major' => 'json',
-        'hobbies' => 'json',
-        'interests' => 'json',
-    ];
+    // protected $casts = [
+    //     'minor' => 'json',
+    //     'major' => 'json',
+    //     'hobbies' => 'json',
+    //     'interests' => 'json',
+    // ];
+
+    public function interests()
+    {
+        return $this->hasMany(Interest::class, 'user_id');
+    }
 }

@@ -24,9 +24,7 @@ class UserProfileResource extends JsonResource
             'user_id' => $this->profile->user_id ?? null,
             'age' => $this->profile->age ?? null,
             'year' => $this->profile->year ?? null,
-            'minor' => $this->profile->minor ?? [],
-            'hobbies' => $this->profile->hobbies ?? [],
-            'interests' => $this->profile->interests ?? [],
+            'others' => $this->profile != null ? OtherResources::collection($this->profile->interests) : null,
             'profileImg' => $this->profile->profileImg ?? 'https://ui-avatars.com/api/?name=' . $this->firstname . '+' . $this->lastname,
             'following' => (bool) $this->followers->where('follower_id', auth()->id())->count(),
         ];

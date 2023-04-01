@@ -129,19 +129,35 @@ class FeedController extends Controller
 
     public function saveFeed($feed_id)
     {
-        $saved = SavedFeed::create([
-            'user_id' => auth()->id(),
-            'feed_id' => $feed_id
-        ]);
+        try {
+            $check_saved = SavedFeed::where('user_id', auth()->id())->where('feed_id', $feed_id)->first();
+            if ($check_saved) {
+                $deleted = SavedFeed::where('user_id', auth()->id())->where('feed_id', $feed_id)->delete();
+                if ($deleted) {
+                    return response([
+                        'message' => 'Deleted'
+                    ],  200);
+                }
+            } else {
+                $saved = SavedFeed::create([
+                    'user_id' => auth()->id(),
+                    'feed_id' => $feed_id
+                ]);
 
-        if ($saved)
+                if ($saved) {
+                    return response(
+                        [
+                            'message' => 'Saved'
+                        ],
+                        201
+                    );
+                }
+            }
+        } catch (\Exception $e) {
             return response([
-                'message' => 'Saved'
-            ],  201);
-
-        return response([
-            'message' => 'Error saving post'
-        ], 500);
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getSavedFeeds()

@@ -31,7 +31,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user/profile/{id}', [ProfileController::class, 'index']);
     Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
-    Route::post('/user/profile/others', [ProfileController::class, 'otherProfileData']);
+    Route::post('/user/profile/minor', [ProfileController::class, 'updateMinor']);
+    Route::post('/user/profile/hobby', [ProfileController::class, 'updateHobby']);
+    Route::post('/user/profile/interest', [ProfileController::class, 'updateInterest']);
     Route::post('/user/follow/{userID}', [\App\Http\Controllers\User\FriendController::class, 'followUser']);
     Route::get('/user/follow/{userID}', [\App\Http\Controllers\User\FriendController::class, 'checkIfFreinds']);
     Route::get('/user/friends', [\App\Http\Controllers\User\FriendController::class, 'getMyFriends']);
