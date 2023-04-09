@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
+use App\Models\EventImages;
 use App\Models\Friend;
 use App\Models\Ticket;
 use App\Models\User;
@@ -15,44 +16,75 @@ class EventController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'event_title' => 'required',
-            'location' => 'required',
-            'date' => 'required',
-            'time' => 'required',
-            'description' => 'required',
-            'ticket_count' => 'required',
-            'recommended_donation_box' => 'required',
-            'ticket_price' => 'required',
-            'image' => 'required|image',
-            // 'invited_users' => 'required'
-        ]);
+        try {
+            $request->validate([
+                'event_title' => 'required',
+                'location' => 'required',
+                'date' => 'required',
+                'time' => 'required',
+                'description' => 'required',
+                'ticket_count' => 'required',
+                'ticket_price' => 'required',
+                // 'image' => 'required',
+                // 'invited_users' => 'required'
+            ]);
 
-        $dataToCreate = [
-            'hoster_id' => auth()->id(),
-            'event_title' => $request->event_title,
-            'location' => $request->location,
-            'date' => $request->date,
-            'time' => $request->time,
-            'description' => $request->description,
-            'ticket_count' => $request->ticket_count,
-            'recommended_donation_box' => $request->recommended_donation_box,
-            'ticket_price' => $request->ticket_price,
-            'image' => $request->image,
-            'user_id' => [],
-        ];
+            $dataToCreate = [
+                'hoster_id' => auth()->id(),
+                'event_title' => $request->event_title,
+                'location' => $request->location,
+                'date' => $request->date,
+                'time' => $request->time,
+                'description' => $request->description,
+                'ticket_count' => $request->ticket_count,
+                'recommended_donation_box' => $request->recommended_donation_box,
+                'ticket_price' => $request->ticket_price,
+                'user_id' => [],
+            ];
 
-        $image = $request->file('image');
-        $imageName = date('YmdHi') . $image->getClientOriginalName();
-        $image->move(public_path('public/eventImages'), $imageName);
-        $dataToCreate['image'] = $imageName;
 
-        $event = Event::create($dataToCreate);
+            // old
+            // $image = $request->file('image');
+            // $imageName = date('YmdHi') . $image->getClientOriginalName();
+            // $image->move(public_path('public/eventImages'), $imageName);
+            // $dataToCreate['image'] = $imageName;
 
-        if ($event) {
+            $event = Event::create($dataToCreate);
+
+            if ($event) {
+                if ($request->hasFile('image')) {
+                    $im = $request->file('image');
+                    for ($i = 0; $i < count($im); $i++) {
+                        $imageName = date('YmdHi') . $im[$i]->getClientOriginalName();
+                        $im[$i]->move(public_path('public/eventImages'), $imageName);
+                        $imageDB = new EventImages();
+                        $imageDB->event_id = $event->id;
+                        $imageDB->image_name = $imageName;
+                        $saveImage = $imageDB->save();
+                    }
+                    if ($saveImage) {
+                        return response([
+                            'message' => 'success',
+                        ], 201);
+                    } else {
+                        return response([
+                            'message' => 'error',
+                        ], 400);
+                    }
+                } else {
+                    return response([
+                        'message' => 'Two or more image needed',
+                    ], 400);
+                }
+            } else {
+                return response([
+                    'message' => 'Error creating Event',
+                ], 400);
+            }
+        } catch (\Exception $e) {
             return response([
-                'message' => 'success'
-            ], 201);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 

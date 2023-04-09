@@ -27,4 +27,14 @@ class Profile extends Model
     {
         return $this->hasMany(Interest::class, 'user_id');
     }
+
+    public function minors()
+    {
+        return $this->hasMany(Minor::class, 'user_id');
+    }
+
+    public function hobbies()
+    {
+        return $this->hasMany(Hobby::class, 'user_id');
+    }
 }

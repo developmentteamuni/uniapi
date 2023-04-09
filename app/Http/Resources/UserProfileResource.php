@@ -21,12 +21,15 @@ class UserProfileResource extends JsonResource
             'major' => $this->major ?? [],
             'university' => $this->university,
             'email' => $this->email,
-            'user_id' => $this->profile->user_id ?? null,
+            'user_id' => $this->id,
             'age' => $this->profile->age ?? null,
             'year' => $this->profile->year ?? null,
-            'others' => $this->profile != null ? OtherResources::collection($this->profile->interests) : null,
-            'profileImg' => $this->profile->profileImg ?? 'https://ui-avatars.com/api/?name=' . $this->firstname . '+' . $this->lastname,
-            'following' => (bool) $this->followers->where('follower_id', auth()->id())->count(),
+            'minor' => $this->profile != null ? MinorResource::collection($this->profile->minors) : [],
+            'interests' => $this->profile != null ? InterestResource::collection($this->profile->interests) : [],
+            'hobbies' => $this->profile != null ? HobbyResource::collection($this->profile->hobbies) : [],
+            'profileImg' => $this->profile == null ? 'https://ui-avatars.com/api/?name=' . $this->firstname . '+' . $this->lastname : getenv('APP_URL') . 'public/profileImages/' . $this->profile->profileImg,
+            'following' => (bool) $this->followers->where('follower_id', auth()->id())->where('user_id', $this->id)->count(),
+            // 'follows_me' => (bool) $this->followers->where('user_id', auth()->id())->count(),
         ];
     }
 }

@@ -27,4 +27,9 @@ class Event extends Model
     protected $casts = [
         'user_id' => 'json',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(EventImages::class);
+    }
 }

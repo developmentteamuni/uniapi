@@ -16,12 +16,16 @@ class EventResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'hoster_id' => $this->hoster_id,
             'title' => $this->event_title,
             'date' => $this->date,
+            'time' => $this->time,
+            'location' => $this->location,
             'price' => $this->ticket_price,
             'description' => $this->description,
             'count' => $this->ticket_count,
-            'image' => env('APP_URL') . 'public/eventImages/' . $this->image,
+            'available' => $this->available ?? 0,
+            'image' => EventImageResource::collection($this->images),
         ];
     }
 }

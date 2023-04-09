@@ -51,9 +51,7 @@ class ProfileController extends Controller
         $request->validate([
             'firstname' => 'required|string',
             'lastname' => 'required|string',
-            'age' => 'required',
             'email' => 'required|email|unique:users,email,' . auth()->id(),
-            'year' => 'required',
         ]);
 
         // user data to update {user table}
@@ -72,7 +70,7 @@ class ProfileController extends Controller
             'user_id' => auth()->id(),
             'age' => $request->age,
             'year' => $request->year,
-            'profileImg' => 'https://ui-avatars.com/api/?name=' . $request->firstname . '+' . $request->lastname,
+            // 'profileImg' => 'https://ui-avatars.com/api/?name=' . $request->firstname . '+' . $request->lastname,
         ];
         // get profile
         $getprofile = Profile::where('user_id', auth()->id())->first();
@@ -84,7 +82,7 @@ class ProfileController extends Controller
                 ], 500);
             } else {
                 return response([
-                    'user' => User::with('profile')->find(auth()->id()),
+                    'user' => new UserProfileResource(User::with('profile')->find(auth()->id())),
                 ], 201);
             }
         } else {
@@ -95,7 +93,8 @@ class ProfileController extends Controller
                 ], 500);
             } else {
                 return response([
-                    'user' => User::with('profile')->find(auth()->id()),
+                    'user' =>
+                    new UserProfileResource(User::with('profile')->find(auth()->id())),
                 ], 201);
             }
         }
@@ -104,12 +103,10 @@ class ProfileController extends Controller
     public function updateHobby(Request $request)
     {
         try {
-            for ($i = 0; $i < count($request->hobby); $i++) {
-                Hobby::create([
-                    'hobby' => $request->hobby[$i],
-                    'user_id' => auth()->id(),
-                ]);
-            }
+            Hobby::create([
+                'hobby' => $request->hobby,
+                'user_id' => auth()->id(),
+            ]);
             return response([
                 'message' => 'success'
             ]);
@@ -123,12 +120,10 @@ class ProfileController extends Controller
     public function updateInterest(Request $request)
     {
         try {
-            for ($i = 0; $i < count($request->interest); $i++) {
-                Interest::create([
-                    'interest' => $request->interest[$i],
-                    'user_id' => auth()->id(),
-                ]);
-            }
+            Interest::create([
+                'interest' => $request->interest,
+                'user_id' => auth()->id(),
+            ]);
             return response([
                 'message' => 'success'
             ]);
@@ -142,12 +137,10 @@ class ProfileController extends Controller
     public function updateMinor(Request $request)
     {
         try {
-            for ($i = 0; $i < count($request->minor); $i++) {
-                Minor::create([
-                    'minor' => $request->minor[$i],
-                    'user_id' => auth()->id(),
-                ]);
-            }
+            Minor::create([
+                'minor' => $request->minor,
+                'user_id' => auth()->id(),
+            ]);
             return response([
                 'message' => 'success'
             ]);

@@ -13,9 +13,16 @@ class FriendController extends Controller
 {
     public function followUser($userID)
     {
-        $check = Friend::where('user_id', Auth::id())->where('follower_id', $userID)->first();
+        $check = Friend::where('follower_id', Auth::id())->where('user_id', $userID)->first();
+
+        if ($userID == auth()->id()) {
+            return response([
+                'message' => 'You cant follow yourself'
+            ], 200);
+        }
+
         if ($check) {
-            $follow = Friend::where('user_id', Auth::id())->where('follower_id', $userID)->delete();
+            $follow = Friend::where('follower_id', Auth::id())->where('user_id', $userID)->delete();
 
             if ($follow) {
                 return response([
@@ -25,8 +32,8 @@ class FriendController extends Controller
         }
 
         Friend::create([
-            'user_id' => Auth::id(),
-            'follower_id' => $userID,
+            'user_id' => $userID,
+            'follower_id' => Auth::id(),
         ]);
 
         return response([
@@ -36,7 +43,7 @@ class FriendController extends Controller
 
     public function checkIfFreinds($userID)
     {
-        $check = Friend::where('user_id', Auth::id())->where('follower_id', $userID)->first();
+        $check = Friend::where('follower_id', Auth::id())->where('user_id', $userID)->first();
         if ($check) {
             return response([
                 'message' => true
