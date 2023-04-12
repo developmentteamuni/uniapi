@@ -33,7 +33,7 @@ class AuthController extends Controller
                 'body' => $otp
             ];
 
-            // Mail::to($registerRequest->email)->send(new OtpMail($details));
+            Mail::to($registerRequest->email)->send(new OtpMail($details));
             return response([
                 'message' => 'Verify OTP'
             ], 201);

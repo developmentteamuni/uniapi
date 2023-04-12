@@ -26,6 +26,7 @@ class EventResource extends JsonResource
             'count' => $this->ticket_count,
             'available' => $this->available ?? 0,
             'image' => EventImageResource::collection($this->images),
+            'qr_code' => $this->qr_codes != null ? getenv('APP_URL') . 'public/public/qrImages/' . $this->qr_codes : null,
         ];
     }
 }

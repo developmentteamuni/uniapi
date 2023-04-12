@@ -56,8 +56,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/events', [EventController::class, 'getUserEvents']);
     Route::get('/events/explore', [EventController::class, 'explore']);
     Route::get('/event/{eventId}', [EventController::class, 'getEvent']);
+    Route::get('/event/getqrcode/{eventId}', [EventController::class, 'qrCodeList']);
     Route::get('/event/attendance/{eventId}', [EventController::class, 'getAttendance']);
     Route::post('/event/scanTicket/{eventId}', [EventController::class, 'scanTicket']);
+    Route::post('/event/buyTicket/{eventId}', [EventController::class, 'buyTicket']);
     Route::post('/event/pay/{eventId}', [PaymentController::class, 'pay']);
     Route::post('/room/create', [RooomateController::class, 'store']);
     Route::post('/group/create', [GroupController::class, 'store']);

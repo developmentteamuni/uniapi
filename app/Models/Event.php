@@ -17,6 +17,7 @@ class Event extends Model
         'time',
         'description',
         'ticket_count',
+        'available',
         'recommended_donation_box',
         'ticket_price',
         'image',
@@ -31,5 +32,10 @@ class Event extends Model
     public function images()
     {
         return $this->hasMany(EventImages::class);
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
     }
 }

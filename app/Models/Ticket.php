@@ -11,12 +11,19 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
+        'event_id',
         'ticket_number',
-        'date_purchased'
+        'date_purchased',
+        'qr_code',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
     }
 }

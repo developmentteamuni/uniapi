@@ -4,19 +4,26 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use App\Http\Resources\TicketResource;
 use App\Models\Event;
 use App\Models\EventImages;
 use App\Models\Friend;
+use App\Models\PaidUser;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class EventController extends Controller
 {
     public function store(Request $request)
     {
         try {
+            $rand = rand(0, 5000000);
+            $image_qr = $rand . 'qrcode.svg';
+            QrCode::format('svg')->generate($request->event_title, '../public/public/qrImages/' . $image_qr);
+
             $request->validate([
                 'event_title' => 'required',
                 'location' => 'required',
@@ -37,8 +44,10 @@ class EventController extends Controller
                 'time' => $request->time,
                 'description' => $request->description,
                 'ticket_count' => $request->ticket_count,
+                'available' => $request->ticket_count,
                 'recommended_donation_box' => $request->recommended_donation_box,
                 'ticket_price' => $request->ticket_price,
+                'qr_codes' => $image_qr,
                 'user_id' => [],
             ];
 
@@ -105,8 +114,74 @@ class EventController extends Controller
             ->get();
 
         return response([
-            'events' => $events
+            'events' => EventResource::collection($events)
         ], 200);
+    }
+
+
+    public function buyTicket($event_id)
+    {
+        try {
+            $event = Event::find($event_id);
+            if ($event->available == 0) {
+                return response([
+                    'message' => 'Event has been sold out'
+                ], 400);
+            }
+            $paid = PaidUser::create([
+                'user_id' => auth()->id(),
+                'event_id' => $event_id,
+                'paid' => 1,
+                'price' => $event->ticket_price
+            ]);
+
+            if ($paid) {
+                $available = (int) $event->ticket_count - 1;
+                $buyEvent = Event::whereId($event_id)->update(['available' => $available]);
+                if ($buyEvent) {
+                    $rand = rand(0, 5000000);
+                    $image_qr = $rand . 'qrcode.svg';
+                    QrCode::format('svg')->generate("Event ID: " . $event_id . " " . "User ID" . " " . auth()->id(), '../public/public/qrImages/' . $image_qr);
+                    Ticket::create([
+                        'user_id' => auth()->id(),
+                        'date_purchased' => Carbon::now(),
+                        'ticket_number' => "UNI" . rand(0, 100),
+                        'qr_code' => $image_qr,
+                        'event_id' => $event_id,
+                    ]);
+
+                    return response([
+                        'message' => 'success',
+                    ], 200);
+                } else {
+                    return response([
+                        'message' => 'Error',
+                    ], 500);
+                }
+            } else {
+                return response([
+                    'message' => 'Error',
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function qrCodeList($event_id)
+    {
+        try {
+            $ticket = Ticket::whereUserId(auth()->id())->whereEventId($event_id)->get();
+            return response([
+                'ticket' => TicketResource::collection($ticket)
+            ], 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function scanTicket($event_id)
