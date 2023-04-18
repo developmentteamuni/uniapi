@@ -18,7 +18,8 @@ class TicketResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'ticket_number' => $this->ticket_number,
-            'qr_code' => getenv('APP_URL') . 'public/qrImages/' . $this->qr_code
+            'qr_code' => getenv('APP_URL') . 'public/qrImages/' . $this->qr_code,
+            'event' => $this->event,
         ];
     }
 }

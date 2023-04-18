@@ -13,6 +13,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class EventController extends Controller
@@ -211,7 +212,7 @@ class EventController extends Controller
 
     public function explore()
     {
-        $events = Event::latest()->get();
+        $events = Event::where('user_id', '!=', Auth::id())->latest()->get();
 
         return response([
             'events' => EventResource::collection($events),

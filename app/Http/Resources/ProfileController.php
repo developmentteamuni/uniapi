@@ -24,7 +24,7 @@ class ProfileController extends JsonResource
             'created_at' => $this->created_at,
             'reacted' => $this->reacted,
             'saved' => $this->saved,
-            'profileImg' => $this->user->profile->profileImg ? getenv('APP_URL') . 'public/profileImages/' . $this->user->profile->profileImg : 'https://ui-avatars.com/api/?name=' . $this->user->firstname . '+' . $this->user->lastname,
+            'profileImg' => $this->user->profile != null ? getenv('APP_URL') . 'public/profileImages/' . $this->user->profile->profileImg : 'https://ui-avatars.com/api/?name=' . $this->user->firstname . '+' . $this->user->lastname,
             'liked_by' => $this->likedby,
             'width' => $this->image != null ? getimagesize('public/feedImages/' . $this->image)[0] : null,
             'height' => $this->image != null ? getimagesize('public/feedImages/' . $this->image)[1] : null,
