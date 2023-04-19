@@ -22,8 +22,8 @@ class EventController extends Controller
     {
         try {
             $rand = rand(0, 5000000);
-            $image_qr = $rand . 'qrcode.svg';
-            QrCode::format('svg')->generate($request->event_title, '../public/public/qrImages/' . $image_qr);
+            // $image_qr = $rand . 'qrcode.svg';
+            // QrCode::format('svg')->generate($request->event_title, '../public/public/qrImages/' . $image_qr);
 
             $request->validate([
                 'event_title' => 'required',
@@ -37,6 +37,12 @@ class EventController extends Controller
                 // 'invited_users' => 'required'
             ]);
 
+            if (!$request->hasFile('image')) {
+                return response([
+                    'message' => 'Image requireds'
+                ]);
+            }
+
             $dataToCreate = [
                 'hoster_id' => auth()->id(),
                 'event_title' => $request->event_title,
@@ -48,7 +54,7 @@ class EventController extends Controller
                 'available' => $request->ticket_count,
                 'recommended_donation_box' => $request->recommended_donation_box,
                 'ticket_price' => $request->ticket_price,
-                'qr_codes' => $image_qr,
+                'qr_codes' => 'qrcode',
                 'user_id' => [],
             ];
 
@@ -83,7 +89,7 @@ class EventController extends Controller
                     }
                 } else {
                     return response([
-                        'message' => 'Two or more image needed',
+                        'message' => 'Image is required',
                     ], 400);
                 }
             } else {
@@ -187,18 +193,22 @@ class EventController extends Controller
 
     public function scanTicket($event_id)
     {
-        $event = Event::find($event_id)->get();
-        $ticket = Ticket::count();
-
-        Ticket::create([
-            'user_id' => auth()->id(),
-            'ticket_number' => str_pad($ticket + 1, 3, '0', STR_PAD_LEFT),
-            'date_purchased' => Carbon::now(),
-        ]);
-
-        return response([
-            'message' => 'success'
-        ], 201);
+        try {
+            $event = Event::find($event_id)->get();
+            if ($event) {
+                return response([
+                    'message' => 'success'
+                ], 200);
+            } else {
+                return response([
+                    'message' => 'Error validating'
+                ], 400);
+            }
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function getAttendance($event_id)
@@ -226,5 +236,21 @@ class EventController extends Controller
         return response([
             'events' => new EventResource($event),
         ], 200);
+    }
+
+    public function myTickets()
+    {
+        try {
+            $tickets = Ticket::whereUserId(auth()->id())->get();
+            return response([
+                'tickets' => TicketResource::collection($tickets)
+            ], 200);
+        } catch (\Exception $e) {
+            return response(
+                [
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 }
