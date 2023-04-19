@@ -13,4 +13,9 @@ class Hobby extends Model
         'user_id',
         'hobby'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(Hobby::class);
+    }
 }

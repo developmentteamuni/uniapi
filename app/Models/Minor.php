@@ -13,4 +13,9 @@ class Minor extends Model
         'user_id',
         'minor'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

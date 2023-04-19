@@ -81,4 +81,19 @@ class User extends Authenticatable
     {
         return $this->firstname . ' ' . $this->lastname;
     }
+
+    public function minors()
+    {
+        return $this->hasMany(Minor::class);
+    }
+
+    public function hobbies()
+    {
+        return $this->hasMany(Hobby::class);
+    }
+
+    public function interests()
+    {
+        return $this->hasMany(Interest::class);
+    }
 }

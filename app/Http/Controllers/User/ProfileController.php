@@ -19,7 +19,7 @@ class ProfileController extends Controller
 {
     public function index($id)
     {
-        $user = User::with('profile')->find($id);
+        $user = User::with('profile')->with('minors')->with('hobbies')->with('interests')->find($id);
 
         if ($user)
             return response([
