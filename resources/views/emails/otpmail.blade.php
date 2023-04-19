@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>rajtechnologies.com</title>
+<title>UNIAPP</title>
 </head>
 <body>
 <h1>{{ $details['title'] }}</h1>
