@@ -253,4 +253,25 @@ class EventController extends Controller
             );
         }
     }
+
+    public function deleteEvent($event_id)
+    {
+        try {
+            $event = Event::where('id', $event_id)->where('user_id', auth()->id())->get();
+            if ($event) {
+                Event::whereId($event_id)->delete();
+                return response([
+                    'message' => 'success'
+                ], 200);
+            } else {
+                return response([
+                    'message' => '404'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

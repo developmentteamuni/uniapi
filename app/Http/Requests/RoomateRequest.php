@@ -27,7 +27,7 @@ class RoomateRequest extends FormRequest
             'title' => 'required|string',
             'location' => 'required|string',
             'image' => 'required',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'description' => 'required|string',
             'clean' => 'required|string',
             'sleep_schdeule' => 'required|string',
