@@ -139,7 +139,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function resentOtp(Request $request)
+    public function resendOtp(Request $request)
     {
         try {
             $otp = rand(1000, 9999);

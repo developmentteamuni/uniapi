@@ -87,6 +87,7 @@ Route::post('changepassword', [AuthController::class, 'changePassword']);
 
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('verify', [AuthController::class, 'verifyOtp'])->name('verify');
+Route::post('resend', [AuthController::class, 'resendOtp'])->name('resendOtp');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
 
