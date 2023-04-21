@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoomateRequest;
 use App\Http\Resources\RoomResource;
+use App\Models\Applied;
 use App\Models\Roomate;
 use App\Models\RoomImage;
 use Illuminate\Http\Request;
@@ -89,5 +90,37 @@ class RooomateController extends Controller
         return response([
             'room' => $room,
         ], 200);
+    }
+
+    public function applyToRoom($room_id)
+    {
+        try {
+            $room = Roomate::find($room_id);
+            if ($room) {
+                $check_applied = Applied::where('user_id', auth()->id())->where('room_id', $room_id)->get();
+                if (count($check_applied) < 1) {
+                    Applied::create([
+                        'user_id' => auth()->id(),
+                        'room_id' => $room_id,
+                        'owner_id' => $room->id
+                    ]);
+                    return response([
+                        'message' => 'success'
+                    ], 200);
+                } else {
+                    return response([
+                        'message' => 'Already applied'
+                    ], 400);
+                }
+            } else {
+                return response([
+                    'message' => 'Room not found'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }

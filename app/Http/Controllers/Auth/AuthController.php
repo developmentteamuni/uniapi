@@ -15,8 +15,8 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $registerRequest)
     {
-        // $otp = rand(1000,9999);
-        $otp = 654321;
+        $otp = rand(1000, 9999);
+        // $otp = 654321;
         $registerRequest->validated();
         $user = User::create([
             'firstname' => $registerRequest->firstname,
@@ -137,5 +137,31 @@ class AuthController extends Controller
         return response([
             'message' => 'success',
         ], 200);
+    }
+
+    public function resentOtp(Request $request)
+    {
+        try {
+            $otp = rand(1000, 9999);
+            $email = $request->email;
+            $details = [
+                'title' => 'Verify your email address',
+                'body' => $otp
+            ];
+            $mail =  Mail::to($email)->send(new OtpMail($details));
+            if ($mail) {
+                return response([
+                    'message' => 'Otp sent'
+                ], 200);
+            } else {
+                return response([
+                    'message' => 'Error sending mail'
+                ], 400);
+            }
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

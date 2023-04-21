@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/fetchGroupPost/{group_id}', [GroupController::class, 'fetchGroupPost']);
     Route::get('/rooms', [RooomateController::class, 'index']);
     Route::get('/room/{room}', [RooomateController::class, 'view']);
+    Route::post('/room/apply/{roomId}', [RooomateController::class, 'applyToRoom']);
     Route::get('/users', [UserLists::class, 'index']);
 });
 
