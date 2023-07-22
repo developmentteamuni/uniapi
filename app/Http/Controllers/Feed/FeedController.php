@@ -17,7 +17,7 @@ class FeedController extends Controller
 
     public function index()
     {
-        $feeds = Feed::with('user')->with('user.profile')->get();
+        $feeds = Feed::where('email_type', auth()->user()->email_type)->with('user')->with('user.profile')->get();
         return response([
             'feed' => ProfileController::collection($feeds),
         ]);
@@ -41,7 +41,8 @@ class FeedController extends Controller
         ]);
 
         $datatosave = [
-            'body' => $request->body
+            'body' => $request->body,
+            'email_type' => auth()->user()->email_type,
         ];
 
 

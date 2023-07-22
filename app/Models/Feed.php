@@ -10,7 +10,7 @@ class Feed extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['body', 'image'];
+    protected $fillable = ['body', 'image', 'email_type'];
     protected $appends = ['reacted', 'saved', 'likedby'];
 
     public function user()

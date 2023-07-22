@@ -18,6 +18,10 @@ class AuthController extends Controller
         $otp = rand(1000, 9999);
         // $otp = 654321;
         $registerRequest->validated();
+        //$emailWithoutSymbols = str_replace(['@', '.com'], '', $registerRequest->email);
+        $emailExt = explode('@', $registerRequest->email);
+        $emailExt = end($emailExt);
+        //dd($emailExt);
         $user = User::create([
             'firstname' => $registerRequest->firstname,
             'lastname' => $registerRequest->lastname,
@@ -26,6 +30,7 @@ class AuthController extends Controller
             'otp' => str($otp),
             'email' => $registerRequest->email,
             'password' => Hash::make($registerRequest->password),
+            'email_type' => $emailExt
         ]);
         if ($user) {
             $details = [
