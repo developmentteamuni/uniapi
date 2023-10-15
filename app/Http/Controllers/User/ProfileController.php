@@ -17,8 +17,15 @@ use Illuminate\Support\Facades\Http;
 
 class ProfileController extends Controller
 {
-    public function index($id)
+    public function index($id = NULL)
     {
+        if(empty($id)){
+            $user = User::with('profile')->with('minors')->with('hobbies')->with('interests')->find(\auth()->id());
+            if ($user)
+                return response([
+                    'user' => new UserProfileResource($user)
+                ], 200);
+        }
         $user = User::with('profile')->with('minors')->with('hobbies')->with('interests')->find($id);
 
         if ($user)
@@ -52,6 +59,8 @@ class ProfileController extends Controller
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'age' => 'required',
+            'year' => 'required'
         ]);
 
         // user data to update {user table}
@@ -103,6 +112,9 @@ class ProfileController extends Controller
     public function updateHobby(Request $request)
     {
         try {
+            $request->validate([
+                'hobby' => 'required'
+            ]);
             Hobby::create([
                 'hobby' => $request->hobby,
                 'user_id' => auth()->id(),
@@ -120,6 +132,9 @@ class ProfileController extends Controller
     public function updateInterest(Request $request)
     {
         try {
+            $request->validate([
+                'interest' => 'required'
+            ]);
             Interest::create([
                 'interest' => $request->interest,
                 'user_id' => auth()->id(),
@@ -137,6 +152,9 @@ class ProfileController extends Controller
     public function updateMinor(Request $request)
     {
         try {
+            $request->validate([
+                'minor' => 'required'
+            ]);
             Minor::create([
                 'minor' => $request->minor,
                 'user_id' => auth()->id(),
@@ -177,7 +195,7 @@ class ProfileController extends Controller
                 ], 500);
             } else {
                 return response([
-                    'message' => 'profile updated'
+                    'message' => 'success'
                 ], 201);
             }
         } else {
@@ -191,7 +209,7 @@ class ProfileController extends Controller
                 ], 500);
             } else {
                 return response([
-                    'message' => 'profile updated'
+                    'message' => 'success'
                 ], 201);
             }
         }

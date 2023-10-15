@@ -33,12 +33,12 @@ class AuthController extends Controller
             'email_type' => $emailExt
         ]);
         if ($user) {
-            $details = [
-                'title' => 'Verify your email address',
-                'body' => $otp
-            ];
+            // $details = [
+            //     'title' => 'Verify your email address',
+            //     'body' => $otp
+            // ];
 
-            Mail::to($registerRequest->email)->send(new OtpMail($details));
+            // Mail::to($registerRequest->email)->send(new OtpMail($details));
             return response([
                 'message' => 'Verify OTP'
             ], 201);

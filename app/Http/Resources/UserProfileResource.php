@@ -27,7 +27,7 @@ class UserProfileResource extends JsonResource
             'minor' => $this->minors != null ? MinorResource::collection($this->minors) : [],
             'interests' => $this->interests != null ? InterestResource::collection($this->interests) : [],
             'hobbies' => $this->hobbies != null ? HobbyResource::collection($this->hobbies) : [],
-            'profileImg' => $this->profile == null ? 'https://ui-avatars.com/api/?name=' . $this->firstname . '+' . $this->lastname : getenv('APP_IMAGE_URL') . 'public/profileImages/' . $this->profile->profileImg,
+            'profileImg' => $this->profile == null ? 'https://ui-avatars.com/api/?name=' . $this->firstname . '+' . $this->lastname : getenv('APP_URL') . 'public/profileImages/' . $this->profile->profileImg,
             'following' => (bool) $this->followers->where('follower_id', auth()->id())->where('user_id', $this->id)->count(),
             // 'follows_me' => (bool) $this->followers->where('user_id', auth()->id())->count(),
         ];

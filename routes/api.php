@@ -29,8 +29,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/user/profile/{id}', [ProfileController::class, 'index']);
-    Route::post('/user/profile', [ProfileController::class, 'updateProfile']);
+    Route::get('/user/profile/{id?}', [ProfileController::class, 'index']);
+    Route::post('/user/update/profile', [ProfileController::class, 'updateProfile']);
     Route::post('/user/profile/minor', [ProfileController::class, 'updateMinor']);
     Route::post('/user/profile/hobby', [ProfileController::class, 'updateHobby']);
     Route::post('/user/profile/interest', [ProfileController::class, 'updateInterest']);
@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user/friends', [\App\Http\Controllers\User\FriendController::class, 'getMyFriends']);
     Route::post('/user/profile/updateimage', [ProfileController::class, 'updateImage']);
     Route::get('/user/recents', [ProfileController::class, 'getRecentPosts']);
-    Route::get('/feed', [FeedController::class, 'index']);
+    Route::get('/feeds', [FeedController::class, 'index']);
     Route::get('/feed/following/', [FeedController::class, 'following']);
     Route::post('/feed/post', [FeedController::class, 'store']);
     Route::delete('/feed/delete/{feed_id}', [FeedController::class, 'deleteFeed']);

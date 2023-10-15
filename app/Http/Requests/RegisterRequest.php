@@ -35,8 +35,7 @@ class RegisterRequest extends FormRequest
             'lastname' => 'required|string',
             'university' => 'required',
             'major' => 'required',
-            'password' => 'required|min:6|same:confirm_password',
-            'confirm_password' => 'required',
+            'password' => 'required|min:6',
             
         ];
     }
